@@ -26,10 +26,10 @@ int main()
     struct listener
     {
         void receive(const an_event &e)
-        { std::cout << "Hello " << e.value << std::endl; }
+        { std::cout << "Hello " << e.value << " an_event" << std::endl; }
 
         void method(const another_event &a)
-        {std::cout << "Hello, World!" << std::endl; }
+        { std::cout << "Hello, another_event!" << std::endl; }
     };
 
     listener listener;
