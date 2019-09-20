@@ -1,16 +1,20 @@
 #include <iostream>
-#include "entt/src/entt/entt.hpp"
+
+#include <gtest/gtest.h>
+#include <entt/entt.hpp>
+
+
 
 struct an_event
 {};
 
 struct listener
 {
-    void receive(const an_event &e, int value)
+    void receive(const an_event &/* e */, int value) const
     { std::cout << "Hello " << value << " an_event" << std::endl; }
 };
 
-int main()
+TEST(listener, listener)
 {
     // define a general purpose dispatcher that works with naked pointers
     entt::dispatcher<int> dispatcher{};
@@ -24,5 +28,4 @@ int main()
     dispatcher.update<an_event>(1);
     dispatcher.sink<an_event>().disconnect<&listener::receive>(&listener);
 
-    return 0;
 }
