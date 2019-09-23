@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 project(entt_dispatcher_tester)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -31,12 +31,15 @@ set(BUILD_TESTING OFF)
 set(ENTT_DEPS_DIR ${PROJECT_DEPS_DIR}/entt)
 set(GOOGLETEST_DEPS_DIR ${PROJECT_DEPS_DIR}/googletest)
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 configure_file(${PROJECT_CMAKE_IN}/deps.in ${PROJECT_DEPS_DIR}/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${PROJECT_DEPS_DIR})
 execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${PROJECT_DEPS_DIR})
 
 # gtest, gtest_main, gmock and gmock_main targets are available from now on
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+add_subdirectory(${GOOGLETEST_DEPS_DIR})
 
 set(BUILD_TESTING ON)
 enable_testing()

@@ -1,31 +1,30 @@
-#include <iostream>
-
 #include <gtest/gtest.h>
-#include <entt/entt.hpp>
+#include <entt/signal/dispatcher.hpp>
 
+#include "include/observer.h"
 
-
-struct an_event
-{};
-
-struct listener
+struct test_observer_concrete : public observer_concrete
 {
-    void receive(const an_event &/* e */, int value) const
-    { std::cout << "Hello " << value << " an_event" << std::endl; }
+    bool on_event_called{false};
+    using parent = observer_concrete;
+
+    void on_event(const an_event &to) noexcept final
+    {
+        parent::on_event(to);
+        on_event_called = true;
+    }
 };
 
-TEST(listener, listener)
+TEST(ObserverPattern, AuthorDemo)
 {
-    // define a general purpose dispatcher that works with naked pointers
-    entt::dispatcher<int> dispatcher{};
+    entt::dispatcher dispatcher;
+    test_observer_concrete observer;
 
-    listener listener;
-    dispatcher.sink<an_event>().connect<&listener::receive>(&listener);
-    dispatcher.trigger<an_event>(42);
-    dispatcher.enqueue<an_event>();
-    dispatcher.enqueue<an_event>();
-    dispatcher.enqueue<an_event>();
-    dispatcher.update<an_event>(1);
-    dispatcher.sink<an_event>().disconnect<&listener::receive>(&listener);
+    dispatcher.sink<an_event>().connect<&test_observer_concrete::on_event>(observer);
+    dispatcher.trigger<an_event>();
+    dispatcher.sink<an_event>().disconnect<&test_observer_concrete::on_event>(observer);
 
+    ASSERT_EQ(observer.state, EVENT_TYPE::RESOLVE);
+    ASSERT_TRUE(observer.on_event_called);
+    ASSERT_TRUE(dispatcher.sink<an_event>().empty());
 }

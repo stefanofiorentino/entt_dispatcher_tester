@@ -1,4 +1,3 @@
-
 set(entt_dispatcher_tester_SRC_DIR ${PROJECT_SRC_DIR})
 
 if (WIN32)
