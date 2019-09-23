@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <entt/signal/dispatcher.hpp>
+#include "include/odr.h"
 
-#include "include/observer.h"
+
 
 struct test_observer_concrete : public observer_concrete
 {
